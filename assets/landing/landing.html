@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body class="site">
+    <div class="landing">
+      <div class="window" id="code">
+          <div class="window-toolbar">
+            <div class="circle-red"></div>
+            <div class="circle-yellow"></div>
+            <div class="circle-green"></div>
+            DeepCream.py
+          </div>
+          <div style="margin: 0 5px 3px">
+            <span><b id="inner1" class="type"></b></span>
+        </div>
+      </div>
+      <div class="window ele" id="terminal">
+          <div class="window-toolbar">
+            <div class="circle-red"></div>
+            <div class="circle-yellow"></div>
+            <div class="circle-green"></div>
+            deepcream@deepcream:~/Dokuments/DeepCream
+          </div>
+          <div style="margin: 0 5px 3px">
+            <span id="inner2" class="type"></span>
+        </div>
+      </div>
+
+      <div class="window ele loading" style="left: 50%; top: 15%">
+          <div class="window-toolbar">
+            <div class="circle-red"></div>
+            <div class="circle-yellow"></div>
+            <div class="circle-green"></div>
+            Loading images
+          </div>
+          <div style="margin: 0 5px 3px">
+            <span class="type inner3"><div style="color: orange; display:inline;">Loading images...</div>
+</span>
+        </div>
+      </div>
+      <div class="window ele loading" style="left: 55%; top: 20%">
+          <div class="window-toolbar">
+            <div class="circle-red"></div>
+            <div class="circle-yellow"></div>
+            <div class="circle-green"></div>
+            Loading U-Net model
+          </div>
+          <div style="margin: 0 5px 3px">
+            <span class="type inner3"><div style="color: orange; display:inline;">Loading U-Net model...</div>
+</span>
+        </div>
+      </div>
+      <div class="window ele loading"  style="left: 60%; top: 25%">
+          <div class="window-toolbar">
+              <div class="circle-red"></div>
+              <div class="circle-yellow"></div>
+              <div class="circle-green"></div>
+              Generating cloud probability masks
+          </div>
+          <div style="margin: 0 5px 3px">
+            <span class="type inner3"><div style="color: orange; display:inline;">Generating cloud probability masks...</div>
+</span>
+        </div>
+      </div>
+      <div class="window ele loading"  style="left: 65%; top: 30%">
+          <div class="window-toolbar">
+              <div class="circle-red"></div>
+              <div class="circle-yellow"></div>
+              <div class="circle-green"></div>
+              Evaluating results
+          </div>
+          <div style="margin: 0 5px 3px">
+            <span class="type inner3"><div style="color: orange; display:inline;">Evaluating results...</div>
+</span>
+        </div>
+      </div>
+      <video autoplay muted>
+        <source src="bg.webm" type="video/webm">
+        Your browser does not support the video tag.
+      </video>
+      <img id="end" src="end.png" alt="End of clip">
+    </div>
+    <div id="footer">
+      Copyright (c) 2022 Paul Maier All Rights Reserved. Video from Earth Science and Remote Sensing Unit, NASA Johnson Space Center (https://eol.jsc.nasa.gov/)
+    </div>
+  </body>
+</html>
+
+<script>
+  const delay = millis => new Promise((resolve) => {
+    setTimeout(_ => resolve(), millis)
+  });
+
+  let l = 0;
+  let m = 0;
+  let n = 0;
+  let o = 0;
+  let p = 0;
+  const loadingWindows = document.getElementsByClassName("loading");
+  const inner3 = document.getElementsByClassName("inner3");
+
+
+  const code_txt = `import datetime
+from cloud_detection.cloud_filter import CloudFilter
+from cloud_analysis.cloud_analyzer import CloudAnalyzer
+
+image_path = “./temp/” + datetime.datetime.now().date()
+curr_image = cv2.imread(image_path)
+
+cloud_filter = CloudFilter(weight_ai=0.8)
+clouds, mask = cloud_filter.evaluate_image(curr_image)
+
+cloud_analyzer = CloudAnalyzer()
+height, wind_dir, interpretation = cloud_analyzer.analyze(clouds)
+
+results = cloud_analysis.evaluate(clouds, height, wind_dir, interpretation)
+
+print(results)`;
+  const cmd_txt = 'python DeepCream.py';
+  const output_txt = `
+Fetching results...
+
+It’s all clouds?
+Always has been 🔫`;
+  const loading_txt = `[====================] 100%	Done!`;
+
+  const speed = 40;
+
+  async function code() {
+    if (l < code_txt.length) {
+      document.getElementById("inner1").innerHTML += code_txt.charAt(l);
+
+      l++;
+      setTimeout(code, 15);
+    } else {
+      await delay(2000);
+      document.getElementById("terminal").style.display = "block"
+      await delay(50);
+      document.getElementById("inner2").innerHTML += '<div style="color: green; display:inline;">deepcream@deepcream</div>:<div style="color: #6272A4; display:inline;">~/Dokuments/DeepCream$ </div>'
+      await delay(500);
+      await command();
+      await delay(2000);
+      document.getElementById("inner2").innerHTML += `<div style="color: #FF79C6;">
+       _______                                  ______
+      |       \\                                /      \\
+      | $$$$$$$\\  ______    ______    ______  |  $$$$$$\\  ______    ______    ______   ______ ____
+      | $$  | $$ /      \\  /      \\  /      \\ | $$   \\$$ /      \\  /      \\  |      \\ |      \\    \\
+      | $$  | $$|  $$$$$$\\|  $$$$$$\\|  $$$$$$\\| $$      |  $$$$$$\\|  $$$$$$\\  \\$$$$$$\\| $$$$$$\\$$$$\\
+      | $$  | $$| $$    $$| $$    $$| $$  | $$| $$   __ | $$   \\$$| $$    $$ /      $$| $$ | $$ | $$
+      | $$__/ $$| $$$$$$$$| $$$$$$$$| $$__/ $$| $$__/  \\| $$      | $$$$$$$$|  $$$$$$$| $$ | $$ | $$
+      | $$    $$ \\$$     \\ \\$$     \\| $$    $$ \\$$    $$| $$       \\$$     \\ \\$$    $$| $$ | $$ | $$
+       \\$$$$$$$   \\$$$$$$$  \\$$$$$$$| $$$$$$$   \\$$$$$$  \\$$        \\$$$$$$$  \\$$$$$$$ \\$$  \\$$  \\$$
+                                    | $$
+                                    | $$
+                                     \\$$
+</div>`
+      await delay(1000);
+      for (m = 0; m < loadingWindows.length; m++) {
+        loadingWindows[m].style.display = "block";
+        await delay(500);
+      }
+      await loading();
+      await delay(4000);
+    }
+  }
+
+  function command() {
+    if (n < cmd_txt.length) {
+      document.getElementById("inner2").innerHTML += cmd_txt.charAt(n);
+
+      n++;
+      setTimeout(command, speed);
+    }
+  }
+
+  async function output() {
+      if (o < output_txt.length) {
+          document.getElementById("inner2").innerHTML += output_txt.charAt(o);
+
+          o++;
+          setTimeout(output, speed);
+      } else {
+          await delay(10000);
+          document.getElementById("end").style.opacity = 1;
+      }
+  }
+
+  function loading() {
+    if (p < loading_txt.length) {
+      for (m = 0; m < inner3.length; m++) {
+        inner3[m].innerHTML += loading_txt.charAt(p);
+      }
+
+      p++;
+      setTimeout(loading, speed);
+    } else {
+      output();
+    }
+  }
+
+  document.getElementById("terminal").style.display = "none"
+
+  for (m = 0; m < loadingWindows.length; m++) {
+    loadingWindows[m].style.display = "none";
+  }
+
+  code();
+</script>
+
+<style>
+  #footer {
+    position: absolute;
+    bottom: 0;
+    margin-left: 5px;
+    font-size: 0.75rem;
+  }
+  .site {
+    margin: 0;
+    padding: 0;
+    background-color: #222227;
+    min-height: 92vh;
+  }
+  h1, h2, h3, h4, h5, p, a {
+    margin: 0;
+    padding: 0;
+    color: white;
+    font-family: Roboto Mono, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+  }
+  .landing {
+    height: 100vh;
+  }
+  .landing video {
+    height: 100vh;
+      width: 100%;
+    object-fit: cover;
+  }
+  .landing img {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 0.9s ease;
+  }
+  @media (max-width: 1000px) {
+      .landing img {
+          opacity: 1;
+      }
+  }
+  .window-toolbar {
+    width: 100%;
+    height: 2rem;
+    line-height: 2rem;
+    background: #282a36;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border-bottom: 1px solid #1c1d26;
+    text-align: center;
+    font-family: sans;
+    margin-bottom: 5px;
+  }
+  .circle-red {
+    border-radius: 100%;
+    background-color: #ff605c;
+    width: 0.8rem;
+    height: 0.8rem;
+    display: inline-block;
+      margin: 8px 2px 8px 6px;
+      float: left;
+  }
+  .circle-yellow {
+    border-radius: 100%;
+    background-color: #ffbd44;
+      width: 0.8rem;
+      height: 0.8rem;
+    display: inline-block;
+      margin: 8px 2px 8px 4px;
+      float: left;
+  }
+  .circle-green {
+    border-radius: 100%;
+    background-color: #00ca4e;
+      width: 0.8rem;
+      height: 0.8rem;
+    display: inline-block;
+      margin: 8px 2px 8px 4px;
+      float: left;
+  }
+  .landing #code {
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    font-size: 0.9rem;
+    background: #1e1f26;
+    box-shadow: 2px 6px 6px 1px rgba(0, 0, 0, 0.5);
+    border-radius: 6px;
+    color: white;
+    width: 80%;
+      max-width: 800px;
+      overflow: hidden;
+  }
+  .landing #terminal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 0.9rem;
+    background: rgba(30, 31, 38, 0.95);
+    box-shadow: 2px 6px 6px 1px rgba(0, 0, 0, 0.4);
+    border-radius: 6px;
+    color: white;
+      width: 100%;
+    max-width: 1000px;
+    transform: translate(-50%, -50%);
+      overflow: hidden;
+  }
+  .landing .loading {
+    position: absolute;
+    width: 30%;
+    font-size: 0.9rem;
+    background: #1e1f26;
+    box-shadow: 2px 6px 6px 1px rgba(0, 0, 0, 0.4);
+    border-radius: 6px;
+    color: white;
+      overflow: hidden;
+  }
+  .landing .type {
+    white-space: pre;
+    font-family: monospace;
+    font-weight: 700;
+  }
+</style>
