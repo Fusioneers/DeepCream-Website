@@ -22,12 +22,6 @@
 
     export let title = '';
     export let pages: Page[] = [];
-
-    function redirect(url) {
-        if (url) {
-            window.open(url, '_blank');
-        }
-    }
 </script>
 
 <div class="site">
@@ -124,12 +118,21 @@
 
                 <div class="team_members">
                   {#each component.team_members.data as team_member}
-                    <div class="team_member" on:click={() => redirect(team_member.attributes.link)}>
-                      <img src={'/assets' + team_member.attributes.profile.data.attributes.url}
-                           alt={team_member.attributes.profile.data.attributes.alternativeText}>
+                    <div class="team_member">
+                      <a href={team_member.attributes.link} target="_blank">
+                        <img src={'/assets' + team_member.attributes.profile.data.attributes.url}
+                             alt={team_member.attributes.profile.data.attributes.alternativeText}>
+                      </a>
                       <div class="text">
                         <h1 class="title">{team_member.attributes.name}</h1>
-                        <h2 class="email">{team_member.attributes.email}</h2>
+                        <h2 class="email">
+                          <a class="email" href="{'mailto:' + team_member.attributes.email}">{team_member.attributes.email}</a>
+                        </h2>
+                        {#if team_member.attributes.github_username}
+                          <h2 class="email">
+                            <a class="email" href={'https://github.com/' + team_member.attributes.github_username} target="_blank">{team_member.attributes.github_username}</a>
+                          </h2>
+                        {/if}
                         <p>{team_member.attributes.characterization}</p>
                       </div>
                     </div>

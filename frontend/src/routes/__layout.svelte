@@ -28,10 +28,12 @@
     <div class="toolbar">
         <div class="title-bar">
             <h1 class="page-title">DeepCream</h1>
-            <div class="github" on:click={redirect}>
-                <img alt="GitHub"
-                     src="/assets/GitHub-Mark/PNG/GitHub-Mark-Light-64px.png">
-            </div>
+            <a href="https://github.com/Fusioneers/DeepCream" target="_blank">
+                <div class="github">
+                    <img alt="GitHub"
+                         src="/assets/GitHub-Mark/PNG/GitHub-Mark-Light-64px.png">
+                </div>
+            </a>
         </div>
         <nav class="navigation">
             {#each pages as page}

@@ -35,6 +35,9 @@
     },
     "link": {
       "type": "string"
+    },
+    "github_username": {
+      "type": "string"
     }
   }
 }

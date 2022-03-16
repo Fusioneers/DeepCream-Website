@@ -80,6 +80,7 @@ export async function get(): Promise<EndpointOutput> {
                         }
                         name
                         email
+                        github_username
                         characterization
                         link
                       }
